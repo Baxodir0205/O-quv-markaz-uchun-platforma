@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="lesson-page">
+    <div class="container">
+        <div class="lesson-layout">
+
+            <div class="lesson-main">
+                <div class="lesson-top">
+                    <a href="{% url 'course_detail' course.slug %}" class="back-link">← Kursga qaytish</a>
+                    <span class="lesson-course">{{ course.title }}</span>
+                </div>
+
+                <div class="lesson-card">
+                    <h1>{{ lesson.title }}</h1>
+                    <p class="lesson-text">{{ lesson.content }}</p>
+
+                    {% if lesson.video_url %}
+                        <div class="video-box">
+                            <iframe
+                                src="{{ lesson.video_url }}"
+                                title="{{ lesson.title }}"
+                                frameborder="0"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    {% endif %}
+
+                    <div class="lesson-actions">
+                        {% if is_completed %}
+                            <span class="completed-badge">✅ Dars tugatilgan</span>
+                        {% else %}
+                            <a href="{% url 'complete_lesson' lesson.id %}" class="complete-btn">
+                                Darsni tugatdim
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <div class="lesson-nav">
+                        {% if prev_lesson %}
+                            <a href="{% url 'lesson_detail' prev_lesson.id %}" class="nav-btn secondary-btn">
+                                ← Oldingi dars
+                            </a>
+                        {% endif %}
+
+                        {% if next_lesson %}
+                            <a href="{% url 'lesson_detail' next_lesson.id %}" class="nav-btn primary-btn">
+                                Keyingi dars →
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="lesson-sidebar">
+                <div class="sidebar-card">
+                    <h3>Darslar ro‘yxati</h3>
+
+                    <div class="sidebar-lessons">
+                        {% for item in lessons %}
+                            <a href="{% url 'lesson_detail' item.id %}"
+                               class="sidebar-lesson {% if item.id == lesson.id %}active{% endif %}">
+                                <span class="lesson-order">{{ forloop.counter }}</span>
+                                <div>
+                                    <strong>{{ item.title }}</strong>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    .lesson-page {
+        min-height: 100vh;
+        background: #f8fafc;
+        padding: 50px 0;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1300px;
+        margin: 0 auto;
+    }
+
+    .lesson-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 28px;
+        align-items: start;
+    }
+
+    .lesson-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .back-link {
+        text-decoration: none;
+        color: #4f46e5;
+        font-weight: 600;
+    }
+
+    .lesson-course {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .lesson-card,
+    .sidebar-card {
+        background: white;
+        border-radius: 22px;
+        padding: 26px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .lesson-card h1 {
+        font-size: 38px;
+        color: #0f172a;
+        margin-bottom: 18px;
+    }
+
+    .lesson-text {
+        color: #475569;
+        font-size: 18px;
+        line-height: 1.9;
+        margin-bottom: 24px;
+    }
+
+    .video-box {
+        margin-bottom: 28px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #0f172a;
+    }
+
+    .video-box iframe {
+        width: 100%;
+        height: 460px;
+        display: block;
+    }
+
+    .lesson-actions {
+        margin-bottom: 24px;
+    }
+
+    .complete-btn {
+        display: inline-block;
+        text-decoration: none;
+        background: #16a34a;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    .complete-btn:hover {
+        background: #15803d;
+    }
+
+    .completed-badge {
+        display: inline-block;
+        background: #dcfce7;
+        color: #166534;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    .lesson-nav {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn {
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: 0.3s;
+    }
+
+    .primary-btn {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background: #4338ca;
+    }
+
+    .secondary-btn {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    .secondary-btn:hover {
+        background: #cbd5e1;
+    }
+
+    .sidebar-card h3 {
+        margin-bottom: 18px;
+        color: #0f172a;
+        font-size: 24px;
+    }
+
+    .sidebar-lessons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sidebar-lesson {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 14px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+        transition: 0.3s;
+    }
+
+    .sidebar-lesson:hover {
+        background: #f8fafc;
+    }
+
+    .sidebar-lesson.active {
+        background: #eef2ff;
+        border-color: #c7d2fe;
+    }
+
+    .lesson-order {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #e0e7ff;
+        color: #3730a3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 950px) {
+        .lesson-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .lesson-card h1 {
+            font-size: 30px;
+        }
+
+        .lesson-text {
+            font-size: 16px;
+        }
+
+        .video-box iframe {
+            height: 280px;
+        }
+    }
+</style>
+{% endblock %}

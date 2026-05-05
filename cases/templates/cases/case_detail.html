@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% block title %}{{ case.title }} | CaseEdu{% endblock %}
+
+{% block content %}
+<section class="case-detail-page">
+    <div class="container">
+
+        <div class="case-top">
+            <span class="badge-level">{{ case.get_level_display }}</span>
+            <h1>{{ case.title }}</h1>
+            <p>{{ case.short_description }}</p>
+
+            <div class="reward-box">
+                <span>+{{ case.xp_reward }} XP</span>
+                <span>+{{ case.coin_reward }} Coin</span>
+            </div>
+        </div>
+
+        <div class="case-box">
+            <h3>Vaziyat</h3>
+            <p>{{ case.situation }}</p>
+        </div>
+
+        <div class="case-box">
+            <h3>Topshiriq</h3>
+            <p>{{ case.task }}</p>
+        </div>
+
+        <div class="case-box">
+            <h3>Yechimingiz</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <textarea name="answer" rows="8" placeholder="Bu yerga javobingizni yozing..." required>{% if existing_submission %}{{ existing_submission.answer }}{% endif %}</textarea>
+
+                <button type="submit">
+                    {% if existing_submission %}
+                        Yangilash
+                    {% else %}
+                        Yuborish
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+
+        {% if existing_submission %}
+        <div class="success-box">
+            Siz bu case ga javob yuborgansiz ✅
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+<style>
+.case-detail-page{
+    background:#f8fafc;
+    min-height:100vh;
+    padding:60px 0;
+}
+.container{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+}
+.case-top{
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:white;
+    padding:40px;
+    border-radius:24px;
+    margin-bottom:25px;
+}
+.case-top h1{
+    font-size:42px;
+    margin:12px 0;
+}
+.case-top p{
+    opacity:.95;
+    font-size:18px;
+}
+.badge-level{
+    display:inline-block;
+    background:rgba(255,255,255,.18);
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+}
+.reward-box{
+    display:flex;
+    gap:14px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+.reward-box span{
+    background:rgba(255,255,255,.15);
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:700;
+}
+.case-box{
+    background:white;
+    padding:28px;
+    border-radius:22px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+.case-box h3{
+    margin-bottom:14px;
+    color:#0f172a;
+}
+.case-box p{
+    color:#475569;
+    line-height:1.8;
+}
+textarea{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    padding:18px;
+    resize:vertical;
+    outline:none;
+}
+button{
+    margin-top:15px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:14px 22px;
+    border-radius:12px;
+    font-weight:700;
+}
+button:hover{
+    background:#1d4ed8;
+}
+.success-box{
+    background:#dcfce7;
+    color:#166534;
+    padding:18px;
+    border-radius:16px;
+    font-weight:700;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<div class="teacher-card">
+    <div class="page-top">
+        <div>
+            <h1>Studentlar</h1>
+            <p>Sizga biriktirilgan guruhlardagi barcha talabalar ro‘yxati.</p>
+        </div>
+    </div>
+
+    <form method="get" style="margin-top:25px;">
+        <div style="position:relative;">
+            <span style="position:absolute;left:18px;top:15px;font-size:20px;">🔍</span>
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search }}"
+                placeholder="Student qidirish..."
+                style="width:100%;padding:16px 18px 16px 52px;border-radius:16px;border:1px solid #dbe2ea;font-weight:700;"
+            >
+        </div>
+    </form>
+</div>
+
+<div class="teacher-card mt-4">
+
+    {% if students %}
+
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Ism Familiya</th>
+                <th>Username</th>
+                <th>Guruh</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for profile in students %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    <b>{{ profile.full_name }}</b>
+                </td>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.group.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+
+    <div style="text-align:center;padding:45px;">
+        <h2>Student topilmadi</h2>
+        <p style="color:#64748b;">Qidiruv bo‘yicha natija yo‘q yoki sizga student biriktirilmagan.</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

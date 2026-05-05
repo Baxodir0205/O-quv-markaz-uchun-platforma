@@ -1,0 +1,115 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+<style>
+.form-card{
+    background:#fff;
+    border-radius:24px;
+    padding:36px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    max-width:700px;
+}
+
+.form-card h1{
+    font-size:30px;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:6px;
+}
+
+.form-card p{
+    color:#64748b;
+    margin-bottom:28px;
+}
+
+.form-label{
+    display:block;
+    font-weight:900;
+    color:#334155;
+    margin-bottom:8px;
+    margin-top:18px;
+}
+
+.form-control,
+.form-select{
+    width:100%;
+    min-height:50px;
+    border-radius:14px;
+    border:1px solid #dbe2ea;
+    padding:12px 16px;
+    font-size:15px;
+    background:#f8fafc;
+    outline:none;
+    transition:.2s;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color:#7c3aed;
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(124,58,237,.1);
+}
+
+textarea.form-control{
+    min-height:130px;
+    resize:vertical;
+}
+
+.btn-row{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+}
+</style>
+
+<div class="form-card">
+    <h1>📋 Vazifa yaratish</h1>
+    <p>O'quvchilarga topshiriq yuboring.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label class="form-label">Guruh</label>
+        <select name="group" class="form-select" required>
+            <option value=""> Guruh tanlang </option>
+            {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="form-label">Sarlavha</label>
+        <input type="text"
+               name="title"
+               class="form-control"
+               placeholder="Masalan: 1-hafta vazifasi"
+               required>
+
+        <label class="form-label">Topshiriq</label>
+        <textarea name="description"
+                  class="form-control"
+                  placeholder="Vazifa tavsifi..."
+                  required></textarea>
+
+        <label class="form-label">Deadline (ixtiyoriy)</label>
+        <input type="datetime-local"
+               name="deadline"
+               class="form-control">
+
+        <label class="form-label">Fayl (ixtiyoriy)</label>
+        <input type="file"
+               name="file"
+               class="form-control">
+
+        <div class="btn-row">
+            <button type="submit" class="btn-main">
+                Vazifa yaratish
+            </button>
+            <a href="{% url 'dashboard:teacher_assignments' %}" class="btn-back">
+                Orqaga
+            </a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

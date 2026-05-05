@@ -1,0 +1,184 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load static %}
+
+{% block teacher_content %}
+
+<style>
+.case-page{
+    width:100%;
+}
+
+.case-header{
+    background:#ffffff;
+    border-radius:24px;
+    padding:34px 38px;
+    margin-bottom:26px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.case-header h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.case-header p{
+    margin-top:8px;
+    color:#64748b;
+    font-size:16px;
+}
+
+.create-btn{
+    text-decoration:none;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    color:#fff !important;
+    padding:15px 22px;
+    border-radius:16px;
+    font-weight:900;
+    box-shadow:0 12px 25px rgba(124,58,237,.25);
+}
+
+.case-list{
+    display:grid;
+    gap:20px;
+}
+
+.case-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    border:1px solid #eef2f7;
+}
+
+.case-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+}
+
+.case-title{
+    font-size:24px;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:10px;
+}
+
+.case-desc{
+    color:#475569;
+    line-height:1.6;
+    margin-bottom:16px;
+}
+
+.badge-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.badge-soft{
+    background:#eef2ff;
+    color:#4338ca;
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:14px;
+}
+
+.btn-purple{
+    text-decoration:none;
+    padding:13px 20px;
+    border-radius:14px;
+    font-weight:900;
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    box-shadow:0 10px 22px rgba(124,58,237,.25);
+    white-space:nowrap;
+}
+
+.empty-box{
+    text-align:center;
+    padding:60px 25px;
+}
+
+.empty-box h3{
+    margin:0;
+    font-size:28px;
+    color:#0f172a;
+    font-weight:900;
+}
+
+.empty-box p{
+    margin-top:12px;
+    margin-bottom:25px;
+    color:#64748b;
+    font-size:17px;
+}
+</style>
+
+<div class="case-page">
+
+    <div class="case-header">
+        <div>
+            <h1>Case Study</h1>
+            <p>Siz yaratgan yoki guruhlarga biriktirilgan amaliy case topshiriqlar.</p>
+        </div>
+
+        <a href="{% url 'dashboard:create_case' %}" class="create-btn">
+            + Yangi Case yaratish
+        </a>
+    </div>
+
+    <div class="case-list">
+
+        {% for case in cases %}
+        <div class="case-card">
+            <div class="case-top">
+
+                <div>
+                    <div class="case-title">
+                        {{ case.title }}
+                    </div>
+
+                    <div class="case-desc">
+                        {{ case.short_description|default:case.situation|truncatechars:180 }}
+                    </div>
+
+                    <div class="badge-row">
+                        <span class="badge-soft">Guruh: {{ case.group.name }}</span>
+                        <span class="badge-soft">Daraja: {{ case.level }}</span>
+                        
+                    </div>
+                </div>
+
+                <a href="{% url 'dashboard:case_submissions' case.id %}" class="btn-purple">
+                    Javoblarni ko‘rish
+                </a>
+
+            </div>
+        </div>
+
+        {% empty %}
+
+        <div class="case-card empty-box">
+            <h3>📘 Hozircha case study yo‘q</h3>
+            <p>Case study yaratish uchun quyidagi tugmani bosing.</p>
+
+            <a href="{% url 'dashboard:create_case' %}" class="create-btn">
+                + Birinchi Case yaratish
+            </a>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

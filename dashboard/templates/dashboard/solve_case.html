@@ -1,0 +1,196 @@
+{% extends 'dashboard/student_base.html' %}
+{% load static %}
+
+{% block content_student %}
+
+<style>
+.solve-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:32px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.solve-card h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.solve-card .subtitle{
+    margin-top:8px;
+    color:#64748b;
+}
+
+.case-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+    margin-top:24px;
+}
+
+.case-box{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:16px;
+}
+
+.case-box h3{
+    margin:0 0 10px;
+    color:#0f172a;
+    font-size:21px;
+    font-weight:900;
+}
+
+.case-box p{
+    margin:0;
+    color:#475569;
+    line-height:1.7;
+}
+
+.answer-area{
+    width:100%;
+    min-height:280px;
+    padding:18px;
+    border-radius:18px;
+    border:1px solid #dbe2ea;
+    font-size:16px;
+    resize:vertical;
+    outline:none;
+}
+
+.answer-area:focus{
+    border-color:#7c3aed;
+    box-shadow:0 0 0 4px rgba(124,58,237,0.12);
+}
+
+.btn-main{
+    margin-top:18px;
+    border:none;
+    padding:14px 24px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 25px rgba(124,58,237,.25);
+}
+
+.btn-back{
+    display:inline-block;
+    margin-left:10px;
+    text-decoration:none;
+    padding:14px 22px;
+    border-radius:16px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+}
+
+.status-box{
+    margin-top:18px;
+    background:#eef2ff;
+    border-radius:18px;
+    padding:18px;
+    color:#334155;
+}
+
+.status-box h4{
+    margin:0 0 10px;
+    color:#4338ca;
+    font-weight:900;
+}
+
+@media(max-width:900px){
+    .case-grid{
+        grid-template-columns:1fr;
+    }
+
+    .btn-back{
+        display:block;
+        margin-left:0;
+        margin-top:10px;
+        text-align:center;
+    }
+
+    .btn-main{
+        width:100%;
+    }
+}
+</style>
+
+<div class="solve-card">
+
+    <h1>{{ case.title }}</h1>
+    <p class="subtitle">Case Study javobini yozing va teacherga yuboring.</p>
+
+    <div class="case-grid">
+
+        <div>
+
+            <div class="case-box">
+                <h3>Vaziyat</h3>
+                <p>{{ case.situation }}</p>
+            </div>
+
+            <div class="case-box">
+                <h3>Topshiriq</h3>
+                <p>{{ case.task }}</p>
+            </div>
+
+            {% if case.expected_result %}
+            <div class="case-box">
+                <h3>Yo‘nalish / Kutilgan natija</h3>
+                <p>{{ case.expected_result }}</p>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <div>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label style="font-weight:900; margin-bottom:8px; display:block;">
+                    Sizning javobingiz
+                </label>
+
+                <textarea
+                    name="answer"
+                    class="answer-area"
+                    placeholder="Bu yerga batafsil javob yozing..."
+                    required>{% if old_submission %}{{ old_submission.answer }}{% endif %}</textarea>
+
+                <button type="submit" class="btn-main">
+                    Javobni yuborish
+                </button>
+
+                <a href="{% url 'dashboard:student_cases' %}" class="btn-back">
+                    Orqaga
+                </a>
+            </form>
+
+            {% if old_submission %}
+            <div class="status-box">
+                <h4>Oldingi javob holati</h4>
+                <p><b>Status:</b> {{ old_submission.status }}</p>
+                <p><b>Ball:</b> {{ old_submission.score }}</p>
+
+                {% if old_submission.feedback %}
+                    <p><b>Teacher izohi:</b> {{ old_submission.feedback }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

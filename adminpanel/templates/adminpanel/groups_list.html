@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Groups{% endblock %}
+
+{% block extra_css %}
+<style>
+.site-footer,
+footer{
+    display:none !important;
+}
+
+main{
+    margin:0;
+    padding:0;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#eef2f7;
+}
+
+.admin-sidebar{
+    width:270px;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.admin-logo{
+    color:#fff;
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:40px;
+    line-height:1.2;
+}
+
+.admin-link{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:700;
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#fff;
+}
+
+.admin-content{
+    flex:1;
+    padding:50px;
+}
+
+.page-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-top h1{
+    font-size:42px;
+    font-weight:800;
+    color:#111827;
+}
+
+.btn-new{
+    background:#304ffe;
+    color:#fff;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:14px;
+    font-weight:700;
+}
+
+.btn-new:hover{
+    color:#fff;
+    background:#1d36d8;
+}
+
+.groups-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:20px;
+}
+
+.group-card{
+    display:block;
+    background:#fff;
+    padding:28px;
+    border-radius:22px;
+    text-decoration:none;
+    color:#111827;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.group-card:hover{
+    transform:translateY(-4px);
+    color:#111827;
+    box-shadow:0 18px 45px rgba(0,0,0,.12);
+}
+
+.group-name{
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.group-info{
+    color:#6b7280;
+    font-size:14px;
+}
+
+.empty-box{
+    background:#fff;
+    padding:35px;
+    border-radius:22px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <div class="admin-logo">CaseEdu<br>Admin</div>
+
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="admin-link">🏠Dashboard</a>
+        <a href="{% url 'adminpanel:new_account' %}" class="admin-link">➕New Account</a>
+        <a href="{% url 'adminpanel:accounts_list' %}" class="admin-link">👥Accounts</a>
+        <a href="{% url 'adminpanel:groups_list' %}" class="admin-link active">🏫 Groups</a>
+        <a href="{% url 'adminpanel:new_group' %}" class="admin-link">📌New Group</a>
+        <a href="{% url 'adminpanel:admin_logout' %}" class="admin-link">🚪Logout</a>
+    </aside>
+
+    <section class="admin-content">
+
+        <div class="page-top">
+            <h1>Groups</h1>
+
+        </div>
+
+        {% if groups %}
+            <div class="groups-grid">
+                {% for group in groups %}
+                    <a href="{% url 'adminpanel:group_detail' group.id %}" class="group-card">
+                        <div class="group-name">{{ group.name }}</div>
+                        <div class="group-info">Guruh ma’lumotlarini ko‘rish</div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-box">
+                <h3>Hali guruh yo‘q</h3>
+                <p>Yangi guruh yaratish uchun “New Group” tugmasini bosing.</p>
+            </div>
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

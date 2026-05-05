@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+nav, .navbar, .custom-navbar, footer, .site-footer{
+    display:none !important;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html, body{
+    margin:0;
+    padding:0;
+    overflow-x:hidden;
+    background:#eef2f7;
+}
+
+main{
+    margin:0 !important;
+    padding:0 !important;
+}
+
+.panel-layout{
+    display:flex;
+    min-height:100vh;
+    width:100%;
+    background:#eef2f7;
+}
+
+.panel-sidebar{
+    width:270px;
+    min-height:100vh;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.panel-logo{
+    color:#ffffff;
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:45px;
+    line-height:1.2;
+}
+
+.panel-link{
+    display:block;
+    color:#ffffff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:800;
+    transition:.3s;
+}
+
+.panel-link:hover,
+.panel-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#ffffff;
+}
+
+.logout-btn{
+    display:block;
+    color:#ffffff !important;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-top:35px;
+    font-weight:800;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#ffffff !important;
+}
+
+.panel-content{
+    flex:1;
+    width:calc(100% - 270px);
+    padding:45px 48px;
+    background:#eef2f7;
+}
+
+.teacher-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    border:1px solid #eef2f7;
+}
+
+.page-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.page-top h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.page-top p{
+    margin-top:8px;
+    color:#64748b;
+    font-size:16px;
+}
+
+.btn-main{
+    display:inline-block;
+    text-decoration:none;
+    border:none;
+    padding:14px 22px;
+    border-radius:15px;
+    font-weight:900;
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    box-shadow:0 12px 25px rgba(124,58,237,0.25);
+    cursor:pointer;
+}
+
+.badge-soft{
+    background:#eef2ff;
+    color:#4338ca;
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:14px;
+}
+
+.mt-4{
+    margin-top:24px;
+}
+
+.text-end{
+    text-align:right;
+}
+
+.text-center{
+    text-align:center;
+}
+
+@media(max-width:900px){
+    .panel-layout{
+        flex-direction:column;
+    }
+
+    .panel-sidebar{
+        width:100%;
+        min-height:auto;
+    }
+
+    .panel-content{
+        width:100%;
+        padding:24px;
+    }
+
+    .page-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .text-end{
+        text-align:left;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="panel-layout">
+
+    <aside class="panel-sidebar">
+        <div class="panel-logo">Teacher<br>Panel</div>
+
+        <a href="/teacher/" class="panel-link">🏠 Dashboard</a>
+        <a href="/teacher/groups/" class="panel-link"> 📌My Groups</a>
+        <a href="/teacher/lessons/" class="panel-link">🎓Lessons</a>
+        <a href="/teacher/assignments/" class="panel-link">🏫 Assignments</a>
+        <a href="/teacher/tests/" class="panel-link">🧠 Tests</a>
+        <a href="/teacher/cases/" class="panel-link">⚡Case Study</a>
+
+        <a href="/logout/" class="logout-btn">🚪 Logout</a>
+    </aside>
+
+    <section class="panel-content">
+        {% block teacher_content %}{% endblock %}
+    </section>
+
+</div>
+{% endblock %}

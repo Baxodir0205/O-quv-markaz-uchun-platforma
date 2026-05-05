@@ -1,0 +1,86 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.result-head{
+    margin-bottom:25px;
+}
+
+.result-head h1{
+    font-size:36px;
+    font-weight:900;
+    color:#0f172a;
+    margin:0;
+}
+
+.result-head p{
+    color:#64748b;
+    margin-top:8px;
+}
+
+.result-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.table thead th{
+    font-weight:900;
+    color:#0f172a;
+}
+
+.good{
+    color:#16a34a;
+    font-weight:900;
+}
+
+.bad{
+    color:#dc2626;
+    font-weight:900;
+}
+</style>
+
+<div class="result-head">
+    <h1>{{ group.name }} Natijalari</h1>
+    <p>Teacher bergan testlar bo‘yicha student statistikasi</p>
+</div>
+
+<div class="result-card">
+
+<table class="table table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Jami test</th>
+            <th>Yechgan</th>
+            <th>To‘g‘ri</th>
+            <th>Natija</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for student in students %}
+        <tr>
+            <td>{{ student.full_name }}</td>
+            <td>{{ student.total_questions }}</td>
+            <td>{{ student.solved_count }}</td>
+            <td>{{ student.correct_count }}</td>
+            <td>
+                {{ student.total_questions }}/{{ student.correct_count }}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5">Student yo‘q</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+</div>
+
+{% endblock %}

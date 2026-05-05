@@ -1,0 +1,159 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.lesson-form-card{
+    max-width:900px;
+    background:#fff;
+    border-radius:24px;
+    padding:36px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.lesson-form-card h1{
+    margin:0;
+    font-size:38px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.lesson-form-card p{
+    margin-top:8px;
+    color:#64748b;
+    margin-bottom:28px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.form-full{
+    grid-column:1 / -1;
+}
+
+label{
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:8px;
+    display:block;
+}
+
+.form-control,
+.form-select{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    padding:14px;
+    min-height:52px;
+    outline:none;
+    margin-bottom:18px;
+}
+
+textarea.form-control{
+    min-height:120px;
+    resize:vertical;
+}
+
+.form-control:focus,
+.form-select:focus{
+    border-color:#7c3aed;
+    box-shadow:0 0 0 4px rgba(124,58,237,.12);
+}
+
+.help-text{
+    margin-top:-10px;
+    margin-bottom:18px;
+    color:#64748b;
+    font-size:14px;
+    font-weight:700;
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    margin-top:10px;
+}
+
+.btn-lightx{
+    display:inline-block;
+    text-decoration:none;
+    padding:14px 22px;
+    border-radius:15px;
+    font-weight:900;
+    background:#eef2ff;
+    color:#4338ca !important;
+}
+
+@media(max-width:800px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+<div class="lesson-form-card">
+
+    <h1>Dars qo‘shish</h1>
+    <p>Kerakli guruhni tanlab, mavzu, o‘quv reja, fayl yoki video material joylang.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+            <div>
+                <label>Guruh</label>
+                <select name="group" class="form-select" required>
+                    <option value="">Guruh tanlang</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label>Mavzu nomi</label>
+                <input type="text" name="title" class="form-control" placeholder="Masalan: Python asoslari" required>
+            </div>
+
+            <div class="form-full">
+                <label>Qisqa izoh</label>
+                <textarea name="description" class="form-control" placeholder="Bu mavzuda nimalar o‘rganiladi?"></textarea>
+            </div>
+
+            <div class="form-full">
+                <label>O‘quv reja / dars matni</label>
+                <textarea name="content" class="form-control" placeholder="Dars rejasi, asosiy tushunchalar yoki teacher uchun eslatmalar..."></textarea>
+            </div>
+
+            <div>
+                <label>PDF / PPTX / DOCX fayl</label>
+                <input type="file" name="file" class="form-control">
+                <div class="help-text">Dars materialini yuklashingiz mumkin.</div>
+            </div>
+
+            <div>
+                <label>Video link</label>
+                <input type="url" name="video_link" class="form-control" placeholder="https://youtube.com/...">
+                <div class="help-text">YouTube yoki boshqa video havola.</div>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn-main">
+                Saqlash
+            </button>
+
+            <a href="{% url 'dashboard:teacher_lessons' %}" class="btn-lightx">
+                Orqaga
+            </a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

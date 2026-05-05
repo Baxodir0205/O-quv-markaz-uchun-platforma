@@ -1,0 +1,16 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+<h1 class="mb-4">My Groups</h1>
+
+<div class="teacher-card">
+    {% for group in groups %}
+        <a href="{% url 'dashboard:teacher_group_detail' group.id %}" class="btn-main mb-2">
+            {{ group.name }} — {{ group.student_count }} student
+        </a>
+        <br>
+    {% empty %}
+        <p>Sizga hali guruh biriktirilmagan.</p>
+    {% endfor %}
+</div>
+{% endblock %}

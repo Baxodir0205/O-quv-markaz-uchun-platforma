@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block title %}Submission review | CaseEdu{% endblock %}
+
+{% block content %}
+<section class="submission-detail-page">
+    <div class="container">
+
+        <div class="top-box">
+            <h1>Case submission review</h1>
+            <p>Teacher bu yerda student javobini tekshiradi, score va feedback beradi.</p>
+        </div>
+
+        <div class="detail-box">
+            <h3>Student</h3>
+            <p>{{ submission.student.username }}</p>
+        </div>
+
+        <div class="detail-box">
+            <h3>Case</h3>
+            <p>{{ submission.case.title }}</p>
+        </div>
+
+        <div class="detail-box">
+            <h3>Student javobi</h3>
+            <p>{{ submission.answer }}</p>
+        </div>
+
+        <div class="detail-box">
+            <h3>Baholash</h3>
+
+            <form method="post" class="review-form">
+                {% csrf_token %}
+
+                <label for="score">Score</label>
+                <input
+                    type="number"
+                    id="score"
+                    name="score"
+                    min="0"
+                    value="{{ submission.score }}"
+                >
+
+                <label for="feedback">Feedback</label>
+                <textarea
+                    id="feedback"
+                    name="feedback"
+                    rows="6"
+                    placeholder="Studentga izoh yozing..."
+                >{{ submission.feedback }}</textarea>
+
+                <button type="submit">Saqlash</button>
+            </form>
+        </div>
+
+        <div class="back-box">
+            <a href="/dashboard/">← Teacher dashboardga qaytish</a>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.submission-detail-page{
+    min-height:100vh;
+    background:#f8fafc;
+    padding:60px 0;
+}
+.container{
+    width:90%;
+    max-width:900px;
+    margin:auto;
+}
+.top-box{
+    background:linear-gradient(135deg,#0f766e,#2563eb);
+    color:white;
+    padding:36px;
+    border-radius:24px;
+    margin-bottom:22px;
+}
+.top-box h1{
+    margin:0 0 10px;
+    font-size:38px;
+}
+.top-box p{
+    margin:0;
+    opacity:.95;
+}
+.detail-box{
+    background:white;
+    padding:26px;
+    border-radius:20px;
+    margin-bottom:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+.detail-box h3{
+    margin-bottom:12px;
+    color:#0f172a;
+}
+.detail-box p{
+    margin:0;
+    color:#475569;
+    line-height:1.8;
+}
+.review-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+.review-form label{
+    font-weight:700;
+    color:#334155;
+}
+.review-form input,
+.review-form textarea{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    padding:16px;
+    outline:none;
+}
+.review-form button{
+    width:fit-content;
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:14px 22px;
+    border-radius:12px;
+    font-weight:700;
+}
+.review-form button:hover{
+    background:#1d4ed8;
+}
+.back-box{
+    margin-top:10px;
+}
+.back-box a{
+    text-decoration:none;
+    color:#2563eb;
+    font-weight:700;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.lesson-header{
+    background:#fff;
+    border-radius:24px;
+    padding:32px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    margin-bottom:24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.lesson-header h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.lesson-header p{
+    margin-top:8px;
+    color:#64748b;
+}
+
+.lesson-card{
+    background:#fff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    margin-bottom:22px;
+}
+
+.lesson-card h2{
+    margin:0;
+    font-size:28px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.lesson-desc{
+    color:#64748b;
+    margin-top:10px;
+}
+
+.lesson-content{
+    margin-top:18px;
+    background:#f8fafc;
+    border-radius:18px;
+    padding:18px;
+    color:#334155;
+}
+
+.lesson-actions{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn-delete{
+    border:none;
+    padding:14px 22px;
+    border-radius:15px;
+    font-weight:900;
+    color:#fff;
+    background:linear-gradient(135deg,#ef4444,#f43f5e);
+    box-shadow:0 10px 22px rgba(239,68,68,.25);
+    cursor:pointer;
+}
+
+.empty-card{
+    background:#fff;
+    border-radius:24px;
+    padding:45px;
+    text-align:center;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.empty-card h2{
+    font-weight:900;
+}
+</style>
+
+<div class="lesson-header">
+    <div>
+        <h1>{{ group.name }} — Darslar</h1>
+        <p>Bu guruhga biriktirilgan o‘quv reja, mavzular va materiallar.</p>
+    </div>
+
+    <a href="{% url 'dashboard:create_lesson' %}?group={{ group.id }}" class="btn-main">
+        + Dars qo‘shish
+    </a>
+</div>
+
+{% for lesson in lessons %}
+<div class="lesson-card">
+
+    <h2>{{ lesson.title|default:"Nomsiz dars" }}</h2>
+
+    <div class="lesson-desc">
+        {{ lesson.description|default:"Izoh kiritilmagan." }}
+    </div>
+
+    {% if lesson.content %}
+        <div class="lesson-content">
+            {{ lesson.content }}
+        </div>
+    {% endif %}
+
+    <div class="lesson-actions">
+
+        {% if lesson.file %}
+            <a href="{{ lesson.file.url }}" target="_blank" class="btn-main">
+                Faylni ochish
+            </a>
+        {% endif %}
+
+        {% if lesson.video_link %}
+            <a href="{{ lesson.video_link }}" target="_blank" class="btn-main">
+                Videoni ko‘rish
+            </a>
+        {% endif %}
+
+        <form method="post"
+              action="{% url 'dashboard:delete_lesson' lesson.id %}"
+              onsubmit="return confirm('Rostdan ham bu darsni o‘chirasizmi?');">
+            {% csrf_token %}
+            <button type="submit" class="btn-delete">
+                O‘chirish
+            </button>
+        </form>
+
+    </div>
+
+</div>
+{% empty %}
+
+<div class="empty-card">
+    <h2>📚 Bu guruhda hali dars yo‘q</h2>
+    <p>Yangi dars qo‘shish uchun tugmani bosing.</p>
+
+    <a href="{% url 'dashboard:create_lesson' %}?group={{ group.id }}" class="btn-main">
+        + Birinchi darsni qo‘shish
+    </a>
+</div>
+<a href="{% url 'dashboard:teacher_lessons' %}" class="btn-back">
+    ← Orqaga
+</a>
+
+{% endfor %}
+
+{% endblock %}
+<div class="lesson-header">
+
+    <div>
+        <a href="{% url 'dashboard:teacher_lessons' %}" class="btn-back">
+            ← Orqaga
+        </a>
+
+        <h1>{{ group.name }} — Darslar</h1>
+        <p>Bu guruhga biriktirilgan o‘quv reja, mavzular va materiallar.</p>
+    </div>
+
+    <a href="{% url 'dashboard:create_lesson' %}?group={{ group.id }}" class="btn-main">
+        + Dars qo‘shish
+    </a>
+
+</div>

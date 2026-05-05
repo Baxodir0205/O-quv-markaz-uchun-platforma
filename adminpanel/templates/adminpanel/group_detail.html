@@ -1,0 +1,419 @@
+{% extends 'base.html' %}
+
+{% block title %}Group Detail{% endblock %}
+
+{% block extra_css %}
+<style>
+.site-footer, footer{display:none!important;}
+main{margin:0!important;padding:0!important;}
+body{
+    overflow-x:hidden;
+    background:#eef2f7;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#eef2f7;
+}
+
+/* SIDEBAR */
+.admin-sidebar{
+    width:270px;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.admin-logo{
+    color:#fff;
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:40px;
+    line-height:1.2;
+}
+
+.admin-link{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:800;
+    transition:.25s;
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#fff;
+}
+
+/* CONTENT */
+.admin-content{
+    flex:1;
+    padding:50px;
+}
+
+.top-actions{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.btn-back{
+    display:inline-block;
+    color:#4f46e5;
+    text-decoration:none;
+    font-weight:900;
+    font-size:18px;
+}
+
+.btn-delete{
+    border:none;
+    background:linear-gradient(135deg,#ef4444,#f43f5e);
+    color:#fff;
+    padding:14px 24px;
+    border-radius:14px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 10px 25px rgba(239,68,68,.25);
+}
+
+.page-title{
+    font-size:48px;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:28px;
+}
+
+/* CARDS */
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+    margin-bottom:25px;
+}
+
+.info-card,
+.admin-box{
+    background:#fff;
+    padding:30px;
+    border-radius:24px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.info-card h3,
+.admin-box h3{
+    margin:0 0 18px;
+    font-size:24px;
+    font-weight:900;
+    color:#111827;
+}
+
+.teacher-pill{
+    display:inline-block;
+    background:#eef2ff;
+    color:#4338ca;
+    padding:10px 15px;
+    border-radius:14px;
+    font-weight:900;
+    margin:5px 8px 5px 0;
+}
+
+.empty-text{
+    margin:0;
+    color:#64748b;
+    font-weight:700;
+    font-size:18px;
+}
+
+/* TABLE */
+.table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table th,
+.table td{
+    padding:16px 14px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+.table th{
+    font-weight:900;
+    color:#111827;
+    background:#f8fafc;
+}
+
+.student-name{
+    font-weight:900;
+    color:#111827;
+}
+
+.btn-remove{
+    border:none;
+    background:#ff0055;
+    color:#fff;
+    padding:11px 16px;
+    border-radius:12px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+/* MODAL */
+.delete-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.60);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.delete-box{
+    width:430px;
+    max-width:90%;
+    background:#fff;
+    border-radius:24px;
+    padding:32px;
+    text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.28);
+}
+
+.delete-box h3{
+    margin:0 0 10px;
+    font-size:30px;
+    font-weight:900;
+    color:#111827;
+}
+
+.delete-box p{
+    color:#64748b;
+    margin-bottom:24px;
+    line-height:1.6;
+    font-weight:700;
+}
+
+.modal-actions{
+    display:flex;
+    gap:12px;
+}
+
+.btn-cancel,
+.btn-danger{
+    flex:1;
+    padding:14px;
+    border:none;
+    border-radius:14px;
+    text-decoration:none;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.btn-cancel{
+    background:#e5e7eb;
+    color:#111827;
+}
+
+.btn-danger{
+    background:linear-gradient(135deg,#ef4444,#f43f5e);
+    color:#fff;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+
+    .admin-layout{
+        flex-direction:column;
+    }
+
+    .admin-sidebar{
+        width:100%;
+    }
+
+    .admin-content{
+        padding:24px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .top-actions{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .page-title{
+        font-size:36px;
+    }
+
+    .table{
+        display:block;
+        overflow-x:auto;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <div class="admin-logo">CaseEdu<br>Admin</div>
+
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="admin-link">🏠Dashboard</a>
+        <a href="{% url 'adminpanel:new_account' %}" class="admin-link">➕New Account</a>
+        <a href="{% url 'adminpanel:accounts_list' %}" class="admin-link">👥Accounts</a>
+        <a href="{% url 'adminpanel:groups_list' %}" class="admin-link active">🏫 Groups</a>
+        <a href="{% url 'adminpanel:new_group' %}" class="admin-link">📌New Group</a>
+        <a href="{% url 'adminpanel:admin_logout' %}" class="admin-link">🚪Logout</a>
+    </aside>
+
+    <section class="admin-content">
+
+        <div class="top-actions">
+
+            <a href="{% url 'adminpanel:groups_list' %}" class="btn-back">
+                ← Groups ga qaytish
+            </a>
+
+            <button type="button"
+                    class="btn-delete"
+                    onclick="openDeleteModal()">
+                Guruhni o‘chirish
+            </button>
+
+        </div>
+
+        <h1 class="page-title">{{ group.name }}</h1>
+
+        <div class="info-grid">
+
+            <div class="info-card">
+                <h3>O‘qituvchilar</h3>
+
+                {% for item in teachers %}
+                    <span class="teacher-pill">
+                        {{ item.teacher.first_name }} {{ item.teacher.last_name }}
+                    </span>
+                {% empty %}
+                    <p class="empty-text">O‘qituvchi biriktirilmagan</p>
+                {% endfor %}
+            </div>
+
+            <div class="info-card">
+                <h3>Talabalar soni</h3>
+                <p class="empty-text">{{ students.count }} ta talaba</p>
+            </div>
+
+        </div>
+
+        <div class="admin-box">
+
+            <h3>Talabalar ro‘yxati</h3>
+
+            <table class="table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ism Familiya</th>
+                        <th>Amal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+                            <span class="student-name">
+                                {{ student.user.first_name }}
+                                {{ student.user.last_name }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <form method="post"
+                                  action="{% url 'adminpanel:remove_student_from_group' group.id student.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-remove">
+                                    Guruhdan chiqarish
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">Bu guruhda student yo‘q</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- DELETE MODAL -->
+<div class="delete-modal" id="deleteModal">
+
+    <div class="delete-box">
+
+        <h3>Guruhni o‘chirish</h3>
+
+        <p>
+            Rostdan ham
+            <b>{{ group.name }}</b>
+            guruhini butunlay o‘chirmoqchimisiz?
+        </p>
+
+        <div class="modal-actions">
+
+            <button onclick="closeDeleteModal()" class="btn-cancel">
+                Bekor qilish
+            </button>
+
+            <form method="post"
+                  action="{% url 'adminpanel:delete_group' group.id %}"
+                  style="flex:1;">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger" style="width:100%;">
+                    Ha, o‘chirish
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+function openDeleteModal(){
+    document.getElementById("deleteModal").style.display = "flex";
+}
+
+function closeDeleteModal(){
+    document.getElementById("deleteModal").style.display = "none";
+}
+</script>
+
+{% endblock %}

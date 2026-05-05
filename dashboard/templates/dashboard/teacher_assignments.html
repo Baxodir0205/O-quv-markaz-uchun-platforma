@@ -1,0 +1,75 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+    <a href="{% url 'dashboard:create_assignment' %}" class="btn-main">
+        + Vazifa yaratish
+    </a>
+</div>
+
+{% for assignment in assignments %}
+<div class="teacher-card mt-4">
+
+    <div class="page-top">
+        <div>
+            <h2 style="font-weight:900;margin:0;">
+                {{ assignment.title }}
+            </h2>
+
+            <p style="color:#64748b;margin-top:8px;">
+                Guruh: <b>{{ assignment.group.name }}</b>
+            </p>
+
+            <p style="color:#64748b;">
+                Deadline:
+                {% if assignment.deadline %}
+                    {{ assignment.deadline }}
+                {% else %}
+                    yo'q
+                {% endif %}
+            </p>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+                <span class="badge-soft">
+                    Javoblar: {{ assignment.total_submissions }}
+                </span>
+
+                <span class="badge-soft">
+                    Tekshirilgan: {{ assignment.checked_submissions }}
+                </span>
+
+                <span class="badge-soft">
+                    Tekshirilmagan: {{ assignment.unchecked_submissions }}
+                </span>
+            </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-end;">
+            {% if assignment.unchecked_submissions > 0 %}
+                <a href="{% url 'dashboard:assignment_submissions' assignment.id %}" class="btn-main">
+                    Tekshirish
+                </a>
+            {% elif assignment.total_submissions > 0 %}
+                <a href="{% url 'dashboard:assignment_submissions' assignment.id %}" class="btn-main">
+                    Tekshirildi
+                </a>
+            {% else %}
+                <a href="{% url 'dashboard:assignment_submissions' assignment.id %}" class="btn-main">
+                    Javob yo'q
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% empty %}
+
+<div class="teacher-card mt-4 text-center">
+    <h2>Hozircha vazifa yo'q</h2>
+    <p style="color:#64748b;">Vazifa yaratgandan keyin shu yerda chiqadi.</p>
+</div>
+
+{% endfor %}
+
+{% endblock %}

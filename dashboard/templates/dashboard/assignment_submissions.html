@@ -1,0 +1,188 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.sub-head{
+    background:#fff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    margin-bottom:24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.sub-head h1{
+    margin:0;
+    font-size:30px;
+    font-weight:900;
+}
+
+.sub-head p{
+    color:#64748b;
+    margin-top:8px;
+}
+
+.sub-card{
+    background:#fff;
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    margin-bottom:24px;
+}
+
+.answer-box{
+    background:#f8fafc;
+    border-radius:18px;
+    padding:18px;
+    margin:16px 0;
+}
+
+.badge-ok{
+    background:#dcfce7;
+    color:#166534;
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:900;
+}
+
+.badge-soft{
+    background:#eef2ff;
+    color:#4338ca;
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:900;
+}
+
+.grade-form{
+    margin-top:18px;
+    display:none;
+}
+
+.grade-form.active{
+    display:block;
+}
+
+.form-control{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    padding:14px;
+    margin-bottom:14px;
+}
+
+.btn-edit{
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.action-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+</style>
+
+<div class="sub-head">
+    <div>
+        <h1>{{ assignment.title }}</h1>
+        <p>Studentlar yuborgan javoblarni tekshiring va ball qo‘ying.</p>
+    </div>
+
+    <a href="{% url 'dashboard:teacher_assignments' %}" class="btn-main">
+        Orqaga
+    </a>
+</div>
+
+{% for item in submissions %}
+<div class="sub-card">
+
+    <h2>{{ item.student.first_name }} {{ item.student.last_name }}</h2>
+
+    <p style="color:#64748b;">
+        Topshirgan vaqti: {{ item.created_at }}
+    </p>
+
+    <div class="answer-box">
+        <strong>Javob:</strong><br>
+        {{ item.answer_text|default:"Javob matni yo‘q" }}
+    </div>
+
+    {% if item.file %}
+        <a href="{{ item.file.url }}" target="_blank" class="btn-main">
+            Faylni ochish
+        </a>
+    {% endif %}
+
+    {% if item.checked %}
+        <div class="action-row" style="margin-top:18px;">
+            <span class="badge-ok">Baholandi</span>
+            <span class="badge-soft">Ball: {{ item.score }}</span>
+
+            <button type="button" class="btn-edit" onclick="toggleForm('form-{{ item.id }}')">
+                Tahrirlash
+            </button>
+        </div>
+
+        {% if item.feedback %}
+            <div class="answer-box">
+                <strong>Teacher izohi:</strong><br>
+                {{ item.feedback }}
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <form method="post"
+          action="{% url 'dashboard:grade_submission' item.id %}"
+          id="form-{{ item.id }}"
+          class="grade-form {% if not item.checked %}active{% endif %}">
+        {% csrf_token %}
+
+        <label><strong>Ball</strong></label>
+        <input type="number"
+               name="score"
+               value="{{ item.score }}"
+               min="0"
+               max="100"
+               class="form-control"
+               required>
+
+        <label><strong>Feedback</strong></label>
+        <textarea name="feedback"
+                  class="form-control"
+                  rows="4">{{ item.feedback }}</textarea>
+
+        <button type="submit" class="btn-main">
+            {% if item.checked %}
+                Qayta saqlash
+            {% else %}
+                Baholash
+            {% endif %}
+        </button>
+    </form>
+
+</div>
+{% empty %}
+
+<div class="sub-card text-center">
+    <h2>Hali javob yo‘q</h2>
+</div>
+
+{% endfor %}
+
+<script>
+function toggleForm(id){
+    const form = document.getElementById(id);
+    form.classList.toggle('active');
+}
+</script>
+
+{% endblock %}

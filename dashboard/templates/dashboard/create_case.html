@@ -1,0 +1,246 @@
+{% extends 'dashboard/teacher_base.html' %}
+{% load static %}
+
+{% block teacher_content %}
+
+<style>
+.create-card{
+    max-width:980px;
+    margin:0 auto;
+    background:#fff;
+    border-radius:22px;
+    padding:26px;
+    box-shadow:0 16px 38px rgba(15,23,42,.08);
+}
+
+.create-card h1{
+    margin:0 0 6px;
+    font-size:30px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.create-card p{
+    color:#64748b;
+    margin-bottom:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.form-group{
+    margin-bottom:14px;
+}
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+label{
+    display:block;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:6px;
+    font-size:14px;
+}
+
+.form-control,
+.form-select{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #e2e8f0;
+    border-radius:13px;
+    font-size:15px;
+    outline:none;
+}
+
+textarea.form-control{
+    min-height:82px;
+    resize:vertical;
+}
+
+.btn-main{
+    margin-top:8px;
+    border:none;
+    padding:13px 22px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    color:#fff;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 25px rgba(124,58,237,.25);
+}
+
+.btn-back{
+    display:inline-block;
+    margin-left:10px;
+    text-decoration:none;
+    padding:13px 20px;
+    border-radius:15px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+}
+
+.info-box{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    padding:14px;
+    color:#475569;
+    font-size:14px;
+}
+
+@media(max-width:768px){
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .btn-back{
+        display:block;
+        margin-left:0;
+        margin-top:10px;
+        text-align:center;
+    }
+}
+</style>
+
+<div class="create-card">
+
+    <h1>Case Study yaratish</h1>
+    <p>Qaysi guruhga yuborilishini tanlang va amaliy topshiriq yarating.</p>
+
+    <div class="info-box">
+        Easy = 20 XP / 10 Coin |
+        Medium = 40 XP / 20 Coin |
+        Hard = 70 XP / 35 Coin
+    </div>
+
+    <br>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Qaysi guruhga yuboriladi?</label>
+                <select name="group" class="form-select" required>
+                    <option value="">Guruhni tanlang</option>
+
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">
+                            {{ group.name }}
+                        </option>
+                    {% empty %}
+                        <option value="">Sizga biriktirilgan guruh yo‘q</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Daraja</label>
+                <select name="level" class="form-select">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label>Case nomi</label>
+                <input
+                    type="text"
+                    name="title"
+                    class="form-control"
+                    placeholder="Masalan: Xavfsiz parol tanlash muammosi"
+                    required
+                >
+            </div>
+
+            <div class="form-group full">
+                <label>Qisqa tavsif</label>
+                <input
+                    type="text"
+                    name="short_description"
+                    class="form-control"
+                    placeholder="Case haqida qisqa izoh"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Vaziyat</label>
+                <textarea
+                    name="situation"
+                    class="form-control"
+                    placeholder="Real hayotiy vaziyatni yozing..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Topshiriq</label>
+                <textarea
+                    name="task"
+                    class="form-control"
+                    placeholder="Student nima qilishi kerak?"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group full">
+                <label>Kutilgan natija</label>
+                <textarea
+                    name="expected_result"
+                    class="form-control"
+                    placeholder="To‘g‘ri yechim qanday bo‘lishi kerak?"
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Max ball</label>
+                <input
+                    type="number"
+                    name="max_score"
+                    class="form-control"
+                    value="100"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Deadline</label>
+                <input
+                    type="datetime-local"
+                    name="deadline"
+                    class="form-control"
+                >
+            </div>
+
+            <div class="form-group full">
+                <label>Rasm / Thumbnail</label>
+                <input
+                    type="file"
+                    name="thumbnail"
+                    class="form-control"
+                >
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn-main">
+            Case Study saqlash
+        </button>
+
+        <a href="{% url 'dashboard:teacher_cases' %}" class="btn-back">
+            Orqaga
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

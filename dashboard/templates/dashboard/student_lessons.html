@@ -1,0 +1,192 @@
+{% extends 'dashboard/student_base.html' %}
+{% load static %}
+
+{% block content_student %}
+
+<style>
+.lesson-header{
+    background:#ffffff;
+    border-radius:24px;
+    padding:34px 38px;
+    margin-bottom:26px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.lesson-header h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.lesson-header p{
+    margin-top:8px;
+    color:#64748b;
+    font-size:16px;
+}
+
+.lesson-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:18px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    overflow:hidden;
+}
+
+.lesson-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.lesson-table thead th{
+    background:#eef2ff;
+    color:#1e1b4b;
+    padding:18px;
+    font-size:15px;
+    font-weight:900;
+}
+
+.lesson-table thead th:first-child{
+    border-radius:16px 0 0 16px;
+}
+
+.lesson-table thead th:last-child{
+    border-radius:0 16px 16px 0;
+}
+
+.lesson-table tbody td{
+    padding:20px 18px;
+    border-bottom:1px solid #edf2f7;
+    color:#334155;
+}
+
+.lesson-table tbody tr:hover{
+    background:#f8faff;
+}
+
+.lesson-number{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#e0e7ff;
+    color:#4338ca;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.lesson-title{
+    font-size:17px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.btn-main{
+    display:inline-block;
+    padding:11px 20px;
+    border-radius:14px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#2563eb,#06b6d4);
+    color:#fff !important;
+    font-weight:800;
+    transition:.3s;
+}
+
+.btn-main:hover{
+    transform:translateY(-2px);
+}
+
+.empty-box{
+    background:#ffffff;
+    border-radius:24px;
+    padding:50px;
+    text-align:center;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.empty-box h3{
+    margin:0;
+    font-size:28px;
+    color:#0f172a;
+}
+
+.empty-box p{
+    margin-top:12px;
+    color:#64748b;
+    font-size:17px;
+}
+</style>
+
+<div class="teacher-content">
+
+    <div class="lesson-header">
+        <h1>Darslar</h1>
+        <p>Teacher tomonidan yuklangan barcha materiallar</p>
+    </div>
+
+    {% if lessons %}
+
+    <div class="lesson-card">
+        <table class="lesson-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Mavzu</th>
+                    <th>Izoh</th>
+                    <th>Fayl</th>
+                    <th>Video</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for lesson in lessons %}
+                <tr>
+                    <td>
+                        <div class="lesson-number">{{ forloop.counter }}</div>
+                    </td>
+
+                    <td>
+                        <div class="lesson-title">{{ lesson.title }}</div>
+                    </td>
+
+                    <td>{{ lesson.description }}</td>
+
+                    <td>
+                        {% if lesson.file %}
+                        <a href="{{ lesson.file.url }}" class="btn-main" target="_blank">
+                            Ochish
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if lesson.video_link %}
+                        <a href="{{ lesson.video_link }}" class="btn-main" target="_blank">
+                            Ko‘rish
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-box">
+        <h3>📚 Hozircha dars yo‘q</h3>
+        <p>Teacher hali lesson yuklamagan</p>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

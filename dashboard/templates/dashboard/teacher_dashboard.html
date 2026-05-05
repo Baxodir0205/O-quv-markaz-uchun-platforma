@@ -1,0 +1,392 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block teacher_content %}
+
+<style>
+.teacher-page{
+    width:100%;
+}
+
+.teacher-topbar{
+    margin-bottom:22px;
+}
+
+.teacher-title{
+    margin:0;
+    font-size:42px;
+    font-weight:900;
+    letter-spacing:-1px;
+    color:#0f172a;
+}
+
+.teacher-subtitle{
+    margin-top:6px;
+    color:#64748b;
+    font-size:16px;
+    font-weight:700;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    margin-bottom:24px;
+}
+
+.stat-card{
+    position:relative;
+    overflow:hidden;
+    display:block;
+    text-decoration:none;
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:26px;
+    padding:24px;
+    color:#0f172a;
+    box-shadow:0 16px 40px rgba(15,23,42,.08);
+    transition:.25s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+    color:#0f172a;
+    box-shadow:0 20px 45px rgba(15,23,42,.13);
+}
+
+.stat-card:after{
+    content:"";
+    position:absolute;
+    width:115px;
+    height:115px;
+    right:-38px;
+    top:-38px;
+    border-radius:50%;
+    background:linear-gradient(135deg,rgba(124,58,237,.18),rgba(6,182,212,.18));
+}
+
+.stat-icon{
+    width:48px;
+    height:48px;
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+    background:linear-gradient(135deg,#ede9fe,#cffafe);
+    margin-bottom:15px;
+}
+
+.stat-card small{
+    display:block;
+    color:#64748b;
+    font-weight:900;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.stat-card h2{
+    font-size:42px;
+    font-weight:900;
+    margin:0;
+    line-height:1;
+    color:#0f172a;
+}
+
+.teacher-card{
+    background:rgba(255,255,255,.92);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:26px;
+    padding:26px;
+    box-shadow:0 16px 40px rgba(15,23,42,.08);
+}
+
+.card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.card-title{
+    margin:0;
+    font-size:28px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.card-subtitle{
+    color:#64748b;
+    font-weight:800;
+    margin-top:4px;
+}
+
+.answer-card{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
+    padding:20px;
+    margin-bottom:16px;
+    transition:.2s;
+}
+
+.answer-card:hover{
+    background:#fff;
+    box-shadow:0 14px 30px rgba(15,23,42,.07);
+}
+
+.answer-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.student-name{
+    font-size:20px;
+    font-weight:900;
+    margin:0;
+    color:#0f172a;
+}
+
+.answer-info{
+    margin:7px 0 0;
+    color:#64748b;
+    font-weight:700;
+}
+
+.badge-check,
+.badge-done{
+    display:inline-block;
+    padding:9px 14px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.badge-check{
+    background:#fff7ed;
+    border:1px solid #fdba74;
+    color:#c2410c;
+}
+
+.badge-done{
+    background:#ecfdf5;
+    border:1px solid #86efac;
+    color:#047857;
+}
+
+.answer-body{
+    margin-top:16px;
+    color:#334155;
+    font-weight:700;
+}
+
+.answer-body b{
+    color:#0f172a;
+}
+
+.answer-text{
+    margin:7px 0 0;
+    line-height:1.6;
+}
+
+.file-link{
+    display:inline-block;
+    margin-top:10px;
+    text-decoration:none;
+    padding:10px 14px;
+    border-radius:13px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+}
+
+.file-link:hover{
+    background:#4338ca;
+    color:#fff;
+}
+
+.grade-form{
+    margin-top:18px;
+    display:grid;
+    grid-template-columns:130px 1fr auto;
+    gap:12px;
+    align-items:stretch;
+}
+
+.grade-form input,
+.grade-form textarea{
+    width:100%;
+    border:1px solid #dbe2ea;
+    border-radius:15px;
+    padding:13px 14px;
+    outline:none;
+    color:#111827;
+    font-weight:800;
+    background:#fff;
+}
+
+.grade-form input:focus,
+.grade-form textarea:focus{
+    border-color:#7c3aed;
+    box-shadow:0 0 0 4px rgba(124,58,237,.12);
+}
+
+.grade-form textarea{
+    min-height:52px;
+    resize:vertical;
+}
+
+.btn-grade{
+    border:none;
+    border-radius:15px;
+    padding:12px 20px;
+    color:#fff;
+    font-weight:900;
+    cursor:pointer;
+    background:linear-gradient(135deg,#6d28d9,#d946ef);
+    transition:.25s;
+    white-space:nowrap;
+}
+
+.btn-grade:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 25px rgba(124,58,237,.28);
+}
+
+.empty-box{
+    padding:22px;
+    border-radius:20px;
+    background:#f8fafc;
+    color:#64748b;
+    font-weight:900;
+    text-align:center;
+}
+
+@media(max-width:1000px){
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .teacher-title{
+        font-size:34px;
+    }
+
+    .grade-form{
+        grid-template-columns:1fr;
+    }
+
+    .card-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+}
+</style>
+
+<div class="teacher-page">
+
+    <div class="teacher-topbar">
+        <h1 class="teacher-title">Teacher Dashboard</h1>
+        <div class="teacher-subtitle">Guruhlar, studentlar va vazifalarni boshqarish markazi</div>
+    </div>
+
+    <div class="stats-grid">
+
+        <a href="{% url 'dashboard:teacher_groups' %}" class="stat-card">
+            <div class="stat-icon">🏫</div>
+            <small>Guruhlarim</small>
+            <h2>{{ groups_count }}</h2>
+        </a>
+
+        <a href="{% url 'dashboard:teacher_students' %}" class="stat-card">
+            <div class="stat-icon">👥</div>
+            <small>Studentlar</small>
+            <h2>{{ students_count }}</h2>
+        </a>
+
+        <a href="{% url 'dashboard:teacher_assignments' %}" class="stat-card">
+            <div class="stat-icon">📚</div>
+            <small>Vazifalar</small>
+            <h2>{{ assignments_count }}</h2>
+        </a>
+
+    </div>
+
+    <div class="teacher-card">
+
+        <div class="card-head">
+            <div>
+                <h3 class="card-title">Oxirgi vazifa javoblari</h3>
+                <div class="card-subtitle">Studentlar yuborgan so‘nggi javoblar</div>
+            </div>
+        </div>
+
+        {% for item in latest_submissions %}
+            <div class="answer-card">
+
+                <div class="answer-top">
+                    <div>
+                        <h4 class="student-name">
+                            {{ item.student.first_name }} {{ item.student.last_name }}
+                        </h4>
+
+                        <p class="answer-info">
+                            Vazifa: <b>{{ item.assignment.title }}</b>
+                        </p>
+
+                        <p class="answer-info">
+                            Vaqt: {{ item.created_at }}
+                        </p>
+                    </div>
+
+                    <div>
+                        {% if item.checked %}
+                            <span class="badge-done">✅ Tekshirildi | Ball: {{ item.score }}</span>
+                        {% else %}
+                            <span class="badge-check">⏳ Tekshirilmagan</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="answer-body">
+                    <b>Javob:</b>
+                    <p class="answer-text">
+                        {{ item.answer_text|default:"Javob matni yo‘q" }}
+                    </p>
+
+                    {% if item.file %}
+                        <a href="{{ item.file.url }}" target="_blank" class="file-link">
+                            📎 Yuklangan faylni ochish
+                        </a>
+                    {% endif %}
+                </div>
+
+                <form method="post" action="{% url 'dashboard:grade_submission' item.id %}" class="grade-form">
+                    {% csrf_token %}
+
+                    <input type="number" name="score" value="{{ item.score }}" min="0" max="{{ item.assignment.max_score }}">
+
+                    <textarea name="feedback" placeholder="Teacher izohi">{{ item.feedback }}</textarea>
+
+                    <button type="submit" class="btn-grade">
+                        Ball qo‘yish
+                    </button>
+                </form>
+
+            </div>
+        {% empty %}
+            <div class="empty-box">
+                Hali javob yo‘q
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

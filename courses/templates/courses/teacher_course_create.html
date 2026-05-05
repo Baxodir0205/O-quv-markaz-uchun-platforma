@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="teacher-create-page">
+    <div class="container">
+
+        <div class="create-box">
+            <div class="create-top">
+                <p class="mini-title">Teacher Panel 👨‍🏫</p>
+                <h1>Yangi kurs yaratish</h1>
+                <p class="sub-text">
+                    Yangi kurs qo‘shing va studentlar uchun ta’lim boshlang.
+                </p>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="create-form">
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="create-btn">
+                    + Kurs yaratish
+                </button>
+            </form>
+
+            <div class="back-box">
+                <a href="/dashboard/" class="back-link">← Dashboardga qaytish</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+.teacher-create-page{
+    min-height:100vh;
+    background:#f8fafc;
+    padding:60px 0;
+}
+
+.container{
+    width:90%;
+    max-width:900px;
+    margin:0 auto;
+}
+
+.create-box{
+    background:white;
+    border-radius:28px;
+    padding:40px;
+    box-shadow:0 12px 35px rgba(0,0,0,.07);
+}
+
+.create-top{
+    margin-bottom:28px;
+}
+
+.mini-title{
+    color:#2563eb;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.create-top h1{
+    margin:0 0 10px;
+    font-size:40px;
+    color:#0f172a;
+}
+
+.sub-text{
+    margin:0;
+    color:#64748b;
+    font-size:16px;
+}
+
+.create-form p{
+    margin-bottom:18px;
+}
+
+.create-form label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:700;
+    color:#334155;
+}
+
+.create-form input,
+.create-form select,
+.create-form textarea{
+    width:100%;
+    padding:14px 16px;
+    border:1px solid #cbd5e1;
+    border-radius:14px;
+    font-size:15px;
+    outline:none;
+}
+
+.create-form textarea{
+    resize:vertical;
+}
+
+.create-form input:focus,
+.create-form select:focus,
+.create-form textarea:focus{
+    border-color:#2563eb;
+}
+
+.create-form input[type="checkbox"]{
+    width:auto;
+    transform:scale(1.2);
+    margin-right:8px;
+}
+
+.create-btn{
+    width:100%;
+    border:none;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    color:white;
+    padding:16px;
+    border-radius:14px;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.create-btn:hover{
+    opacity:.95;
+}
+
+.back-box{
+    margin-top:20px;
+    text-align:center;
+}
+
+.back-link{
+    text-decoration:none;
+    color:#2563eb;
+    font-weight:700;
+}
+
+@media(max-width:768px){
+    .create-box{
+        padding:24px;
+    }
+
+    .create-top h1{
+        font-size:30px;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'dashboard/student_base.html' %}
+{% load static %}
+
+{% block content_student %}
+
+<style>
+.case-page{
+    max-width:1200px;
+    margin:0 auto;
+}
+
+.case-header{
+    background:#ffffff;
+    border-radius:24px;
+    padding:34px 38px;
+    margin-bottom:26px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.case-header h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.case-header p{
+    margin-top:8px;
+    color:#64748b;
+    font-size:16px;
+}
+
+.case-table-box{
+    background:#ffffff;
+    border-radius:24px;
+    padding:22px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.case-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.case-table thead tr{
+    background:#f5f3ff;
+}
+
+.case-table th{
+    padding:18px;
+    text-align:left;
+    font-size:15px;
+    font-weight:900;
+    color:#5b21b6;
+}
+
+.case-table td{
+    padding:18px;
+    border-top:1px solid #eef2f7;
+    vertical-align:middle;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.badge-num{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    background:#ede9fe;
+    color:#7c3aed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.btn-main{
+    display:inline-block;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:14px;
+    font-weight:900;
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    box-shadow:0 10px 24px rgba(124,58,237,.22);
+}
+
+.done-badge{
+    display:inline-block;
+    padding:9px 14px;
+    border-radius:999px;
+    background:#dcfce7;
+    color:#166534;
+    font-weight:900;
+}
+
+.score-badge{
+    display:inline-block;
+    padding:9px 14px;
+    border-radius:999px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    font-weight:900;
+    margin-left:8px;
+}
+
+.wait-badge{
+    display:inline-block;
+    padding:9px 14px;
+    border-radius:999px;
+    background:#fef3c7;
+    color:#92400e;
+    font-weight:900;
+    margin-left:8px;
+}
+
+.empty-box{
+    text-align:center;
+    padding:55px 20px;
+}
+
+.empty-box h3{
+    margin:0;
+    font-size:28px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.empty-box p{
+    margin-top:10px;
+    color:#64748b;
+}
+
+@media(max-width:900px){
+    .case-table{
+        display:block;
+        overflow-x:auto;
+    }
+}
+</style>
+
+<div class="case-page">
+
+    <div class="case-header">
+        <h1>Case Study</h1>
+        <p>Sizning guruhingiz uchun mavjud case study topshiriqlari.</p>
+    </div>
+
+    <div class="case-table-box">
+
+        {% if cases %}
+
+        <table class="case-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nomi</th>
+                    <th>Vaziyat</th>
+                    <th>Holat</th>
+                    <th>Amal</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for case in cases %}
+                <tr>
+                    <td>
+                        <div class="badge-num">{{ forloop.counter }}</div>
+                    </td>
+
+                    <td>{{ case.title }}</td>
+
+                    <td>{{ case.situation|truncatechars:70 }}</td>
+
+                    <td>
+                        {% if case.my_submission %}
+                            <span class="done-badge">Bajarildi</span>
+
+                            {% if case.my_submission.status == 'checked' %}
+                                <span class="score-badge">
+                                    Ball: {{ case.my_submission.score }}
+                                </span>
+                            {% else %}
+                                <span class="wait-badge">
+                                    Tekshirilmoqda
+                                </span>
+                            {% endif %}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if case.my_submission %}
+                            <span class="done-badge">Yuborildi</span>
+                        {% else %}
+                            <a href="{% url 'dashboard:solve_case' case.id %}" class="btn-main">
+                                Boshlash
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+
+        <div class="empty-box">
+            <h3>📘 Hozircha case study yo‘q</h3>
+            <p>Teacher yangi case yaratgandan keyin shu yerda chiqadi.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

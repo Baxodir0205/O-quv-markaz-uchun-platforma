@@ -1,0 +1,278 @@
+{% extends 'dashboard/student_base.html' %}
+
+{% block content_student %}
+
+<style>
+.test-solve-wrap{
+    max-width:1000px;
+    margin:0 auto;
+}
+
+.test-card{
+    background:#fff;
+    border-radius:28px;
+    padding:36px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    border:1px solid #eef2f7;
+}
+
+.test-card h1{
+    margin:0;
+    font-size:36px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.test-desc{
+    margin-top:8px;
+    color:#64748b;
+}
+
+.result-info{
+    margin-top:22px;
+    padding:16px 18px;
+    border-radius:18px;
+    font-weight:900;
+    background:#eef2ff;
+    color:#4338ca;
+}
+
+.question-box{
+    margin-top:24px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
+    padding:22px;
+}
+
+.question-title{
+    font-size:20px;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:16px;
+}
+
+.options{
+    display:grid;
+    gap:12px;
+}
+
+.option-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:16px 18px;
+    border:2px solid #e2e8f0;
+    border-radius:18px;
+    background:#fff;
+    font-weight:800;
+    color:#0f172a;
+}
+
+.option-box input{
+    width:18px;
+    height:18px;
+    accent-color:#9333ea;
+}
+
+.option-letter{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:#ede9fe;
+    color:#7c3aed;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+}
+
+.correct-option{
+    border-color:#22c55e;
+    background:#ecfdf5;
+}
+
+.wrong-option{
+    border-color:#ef4444;
+    background:#fef2f2;
+}
+
+.mark{
+    margin-left:auto;
+    font-size:24px;
+    font-weight:900;
+}
+
+.mark-ok{
+    color:#16a34a;
+}
+
+.mark-bad{
+    color:#dc2626;
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+    flex-wrap:wrap;
+}
+
+.btn-submit{
+    border:none;
+    padding:14px 24px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    color:#fff;
+    font-weight:900;
+    box-shadow:0 12px 25px rgba(124,58,237,.25);
+}
+
+.btn-back{
+    display:inline-block;
+    text-decoration:none;
+    padding:14px 22px;
+    border-radius:16px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+}
+</style>
+
+<div class="test-solve-wrap">
+
+    <div class="test-card">
+
+        <h1>{{ test.title|default:"Test" }}</h1>
+        <div class="test-desc">
+            {{ test.description|default:"" }}
+        </div>
+
+        {% if old_result %}
+
+            <div class="result-info">
+                Siz bu testni yechgansiz. Natija:
+                {{ old_result.total_questions }}/{{ old_result.correct_count }}
+            </div>
+
+            {% for question in questions %}
+            <div class="question-box">
+                <div class="question-title">
+                    {{ forloop.counter }}. {{ question.question }}
+                </div>
+
+                <div class="options">
+
+                    <div class="option-box {% if question.correct_answer == 'A' %}correct-option{% elif question.my_answer.selected_answer == 'A' %}wrong-option{% endif %}">
+                        <span class="option-letter">A</span>
+                        <span>{{ question.option_a }}</span>
+
+                        {% if question.correct_answer == 'A' %}
+                            <span class="mark mark-ok">✓</span>
+                        {% elif question.my_answer.selected_answer == 'A' %}
+                            <span class="mark mark-bad">✕</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="option-box {% if question.correct_answer == 'B' %}correct-option{% elif question.my_answer.selected_answer == 'B' %}wrong-option{% endif %}">
+                        <span class="option-letter">B</span>
+                        <span>{{ question.option_b }}</span>
+
+                        {% if question.correct_answer == 'B' %}
+                            <span class="mark mark-ok">✓</span>
+                        {% elif question.my_answer.selected_answer == 'B' %}
+                            <span class="mark mark-bad">✕</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="option-box {% if question.correct_answer == 'C' %}correct-option{% elif question.my_answer.selected_answer == 'C' %}wrong-option{% endif %}">
+                        <span class="option-letter">C</span>
+                        <span>{{ question.option_c }}</span>
+
+                        {% if question.correct_answer == 'C' %}
+                            <span class="mark mark-ok">✓</span>
+                        {% elif question.my_answer.selected_answer == 'C' %}
+                            <span class="mark mark-bad">✕</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="option-box {% if question.correct_answer == 'D' %}correct-option{% elif question.my_answer.selected_answer == 'D' %}wrong-option{% endif %}">
+                        <span class="option-letter">D</span>
+                        <span>{{ question.option_d }}</span>
+
+                        {% if question.correct_answer == 'D' %}
+                            <span class="mark mark-ok">✓</span>
+                        {% elif question.my_answer.selected_answer == 'D' %}
+                            <span class="mark mark-bad">✕</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="actions">
+                <a href="{% url 'dashboard:student_tests' %}" class="btn-back">
+                    Orqaga
+                </a>
+            </div>
+
+        {% else %}
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% for question in questions %}
+                <div class="question-box">
+                    <div class="question-title">
+                        {{ forloop.counter }}. {{ question.question }}
+                    </div>
+
+                    <div class="options">
+
+                        <label class="option-box">
+                            <input type="radio" name="answer_{{ question.id }}" value="A" required>
+                            <span class="option-letter">A</span>
+                            <span>{{ question.option_a }}</span>
+                        </label>
+
+                        <label class="option-box">
+                            <input type="radio" name="answer_{{ question.id }}" value="B" required>
+                            <span class="option-letter">B</span>
+                            <span>{{ question.option_b }}</span>
+                        </label>
+
+                        <label class="option-box">
+                            <input type="radio" name="answer_{{ question.id }}" value="C" required>
+                            <span class="option-letter">C</span>
+                            <span>{{ question.option_c }}</span>
+                        </label>
+
+                        <label class="option-box">
+                            <input type="radio" name="answer_{{ question.id }}" value="D" required>
+                            <span class="option-letter">D</span>
+                            <span>{{ question.option_d }}</span>
+                        </label>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="actions">
+                    <button type="submit" class="btn-submit">
+                        Testni yakunlash
+                    </button>
+
+                    <a href="{% url 'dashboard:student_tests' %}" class="btn-back">
+                        Orqaga
+                    </a>
+                </div>
+            </form>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

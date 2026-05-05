@@ -1,0 +1,125 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.group-header{
+    background:#ffffff;
+    border-radius:24px;
+    padding:32px;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    margin-bottom:26px;
+}
+
+.group-header h1{
+    margin:0;
+    font-size:38px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.group-header p{
+    margin-top:8px;
+    color:#64748b;
+}
+
+.group-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+}
+
+.group-card{
+    display:block;
+    background:#fff;
+    border-radius:24px;
+    padding:28px;
+    text-decoration:none;
+    color:#0f172a;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+    border:1px solid #eef2f7;
+    transition:.25s;
+}
+
+.group-card:hover{
+    transform:translateY(-5px);
+    color:#0f172a;
+    box-shadow:0 24px 55px rgba(15,23,42,.12);
+}
+
+.group-card h2{
+    margin:0;
+    font-size:26px;
+    font-weight:900;
+}
+
+.group-card p{
+    margin-top:10px;
+    color:#64748b;
+    line-height:1.6;
+}
+
+.badge-soft{
+    display:inline-block;
+    background:#eef2ff;
+    color:#4338ca;
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:14px;
+    margin-top:14px;
+}
+
+.empty-card{
+    background:#fff;
+    border-radius:24px;
+    padding:45px;
+    text-align:center;
+    box-shadow:0 18px 45px rgba(15,23,42,.08);
+}
+
+.empty-card h2{
+    font-weight:900;
+    color:#0f172a;
+}
+
+.empty-card p{
+    color:#64748b;
+}
+
+@media(max-width:1000px){
+    .group-grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+
+<div class="group-header">
+    <h1>Lessons</h1>
+    <p>Avval guruhni tanlang. Keyin shu guruh ichida o‘quv reja, mavzular, fayl va video materiallarni boshqarasiz.</p>
+</div>
+
+<div class="group-grid">
+
+    {% for group in groups %}
+        <a href="{% url 'dashboard:teacher_group_lessons' group.id %}" class="group-card">
+            <h2>{{ group.name }}</h2>
+
+            <p>
+                Ushbu guruh uchun yuklangan darslar, o‘quv reja va materiallarni ko‘rish.
+            </p>
+
+            <span class="badge-soft">
+                Darslar: {{ group.lessons_count }}
+            </span>
+        </a>
+    {% empty %}
+        <div class="empty-card">
+            <h2>Guruh yo‘q</h2>
+            <p>Sizga hali hech qanday guruh biriktirilmagan.</p>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

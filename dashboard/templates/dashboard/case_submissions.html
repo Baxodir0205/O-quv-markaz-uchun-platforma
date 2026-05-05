@@ -1,0 +1,75 @@
+{% extends 'dashboard/teacher_base.html' %}
+
+{% block teacher_content %}
+
+<style>
+.card{
+    background:#fff;
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 16px 38px rgba(15,23,42,.08);
+}
+
+h1{
+    margin:0 0 8px;
+    font-size:30px;
+    font-weight:900;
+}
+
+.sub-card{
+    margin-top:18px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:20px;
+}
+
+textarea,input{
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:1px solid #cbd5e1;
+    margin-top:8px;
+}
+
+.btn{
+    margin-top:10px;
+    border:none;
+    padding:12px 18px;
+    border-radius:14px;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    color:white;
+    font-weight:900;
+}
+</style>
+
+<div class="card">
+    <h1>{{ case.title }}</h1>
+    <p>Student javoblari</p>
+
+    {% for sub in submissions %}
+    <div class="sub-card">
+        <h3>{{ sub.student.username }}</h3>
+        <p><b>Javob:</b> {{ sub.answer }}</p>
+        <p><b>Status:</b> {{ sub.status }}</p>
+
+        <form method="post" action="{% url 'dashboard:grade_case_submission' sub.id %}">
+            {% csrf_token %}
+            <label>Ball</label>
+            <input type="number" name="score" value="{{ sub.score }}" max="{{ case.max_score }}">
+
+            <label>Feedback</label>
+            <textarea name="feedback">{{ sub.feedback }}</textarea>
+
+            <button class="btn" type="submit">Baholash</button>
+        </form>
+    </div>
+    {% empty %}
+    <div class="sub-card">
+        <h3>Hozircha javob yo‘q</h3>
+        <p>Student case yechgandan keyin shu yerda chiqadi.</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+
+{% block title %}New Group{% endblock %}
+
+{% block extra_css %}
+<style>
+.site-footer, footer{display:none!important;}
+main{margin:0;padding:0;}
+body{overflow-x:hidden;}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#eef2f7;
+}
+
+.admin-sidebar{
+    width:270px;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.admin-logo{
+    color:#fff;
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:40px;
+    line-height:1.2;
+}
+
+.admin-link{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:700;
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#fff;
+}
+
+.admin-content{
+    flex:1;
+    padding:50px;
+}
+
+.btn-back{
+    display:inline-block;
+    margin-bottom:25px;
+    color:#4f46e5;
+    text-decoration:none;
+    font-weight:700;
+}
+
+.form-box{
+    max-width:850px;
+    background:#fff;
+    padding:40px;
+    border-radius:24px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.form-box h1{
+    font-size:42px;
+    font-weight:800;
+    margin-bottom:10px;
+    color:#111827;
+}
+
+.form-box p{
+    color:#6b7280;
+    margin-bottom:30px;
+}
+
+.form-label{
+    font-weight:700;
+    margin-bottom:8px;
+    display:block;
+}
+
+.form-control{
+    height:52px;
+    border-radius:14px;
+    margin-bottom:24px;
+}
+
+.select-section{
+    margin-bottom:18px;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    overflow:hidden;
+    background:#f8fafc;
+}
+
+.select-toggle{
+    width:100%;
+    border:none;
+    background:#fff;
+    padding:18px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-weight:800;
+    color:#111827;
+    font-size:17px;
+}
+
+.plus-icon{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    line-height:1;
+}
+
+.select-body{
+    display:none;
+    padding:18px;
+    max-height:260px;
+    overflow-y:auto;
+}
+
+.select-body.show{
+    display:block;
+}
+
+.check-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#fff;
+    padding:13px 15px;
+    border-radius:12px;
+    margin-bottom:10px;
+    border:1px solid #edf0f5;
+    cursor:pointer;
+}
+
+.check-item:hover{
+    background:#f3f4ff;
+}
+
+.check-item input{
+    width:18px;
+    height:18px;
+}
+
+.empty-text{
+    color:#6b7280;
+    margin:0;
+}
+
+.btn-save{
+    width:100%;
+    height:54px;
+    border:none;
+    border-radius:14px;
+    color:#fff;
+    font-weight:800;
+    background:linear-gradient(90deg,#304ffe,#7c00ff);
+    margin-top:10px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <div class="admin-logo">CaseEdu<br>Admin</div>
+
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="admin-link">🏠Dashboard</a>
+        <a href="{% url 'adminpanel:new_account' %}" class="admin-link">➕New Account</a>
+        <a href="{% url 'adminpanel:accounts_list' %}" class="admin-link">👥Accounts</a>
+        <a href="{% url 'adminpanel:groups_list' %}" class="admin-link">🏫 Groups</a>
+        <a href="{% url 'adminpanel:new_group' %}" class="admin-link active">📌New Group</a>
+        <a href="{% url 'adminpanel:admin_logout' %}" class="admin-link">🚪Logout</a>
+    </aside>
+
+    <section class="admin-content">
+
+        <a href="{% url 'adminpanel:groups_list' %}" class="btn-back">
+            ← Groups ga qaytish
+        </a>
+
+        <div class="form-box">
+            <h1>Yangi guruh yaratish</h1>
+            <p>Guruh nomini yozing, teacher va studentlarni tanlab saqlang.</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label class="form-label">Guruh nomi</label>
+                <input type="text"
+                       name="name"
+                       class="form-control"
+                       placeholder="Masalan: 641-23"
+                       required>
+
+                <div class="select-section">
+                    <button type="button" class="select-toggle" onclick="toggleList('teacherList')">
+                        <span>Teacher biriktirish</span>
+                        <span class="plus-icon">+</span>
+                    </button>
+
+                    <div id="teacherList" class="select-body">
+                        {% for teacher in teachers %}
+                            <label class="check-item">
+                                <input type="checkbox" name="teachers" value="{{ teacher.id }}">
+                                <span>{{ teacher.user.first_name }} {{ teacher.user.last_name }}</span>
+                            </label>
+                        {% empty %}
+                            <p class="empty-text">Hali teacher yo‘q. Avval New Account orqali Teacher yarating.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="select-section">
+                    <button type="button" class="select-toggle" onclick="toggleList('studentList')">
+                        <span>Student qo‘shish</span>
+                        <span class="plus-icon">+</span>
+                    </button>
+
+                    <div id="studentList" class="select-body">
+                        {% for student in students %}
+                            <label class="check-item">
+                                <input type="checkbox" name="students" value="{{ student.id }}">
+                                <span>{{ student.user.first_name }} {{ student.user.last_name }}</span>
+                            </label>
+                        {% empty %}
+                            <p class="empty-text">Hali student yo‘q.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">
+                    Saqlash
+                </button>
+            </form>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+function toggleList(id){
+    const box = document.getElementById(id);
+    box.classList.toggle('show');
+}
+</script>
+
+{% endblock %}

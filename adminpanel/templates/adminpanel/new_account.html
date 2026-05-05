@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}New Account{% endblock %}
+
+{% block extra_css %}
+<style>
+nav, .navbar, .custom-navbar, footer, .site-footer{
+    display:none !important;
+}
+
+main{
+    margin:0 !important;
+    padding:0 !important;
+}
+
+body{
+    overflow-x:hidden;
+    background:#eef2f7;
+}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#eef2f7;
+}
+
+.admin-sidebar{
+    width:270px;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.admin-logo{
+    color:#fff;
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:40px;
+    line-height:1.2;
+}
+
+.admin-link{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:800;
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#fff;
+}
+
+.admin-content{
+    flex:1;
+    padding:45px;
+}
+
+.form-box{
+    max-width:760px;
+    background:#fff;
+    padding:36px;
+    border-radius:24px;
+    box-shadow:0 14px 35px rgba(15,23,42,.08);
+}
+
+.form-box h1{
+    font-size:38px;
+    font-weight:900;
+    margin:0 0 8px;
+    color:#111827;
+}
+
+.form-box p{
+    color:#6b7280;
+    margin-bottom:26px;
+}
+
+label{
+    font-weight:800;
+    margin-bottom:7px;
+    display:block;
+    color:#111827;
+}
+
+.form-control,
+.form-select{
+    width:100%;
+    height:50px;
+    border-radius:14px;
+    margin-bottom:16px;
+    border:1px solid #dbe2ea;
+    padding:0 14px;
+    font-size:15px;
+}
+
+.btn-save{
+    width:100%;
+    height:54px;
+    border:none;
+    border-radius:14px;
+    color:#fff;
+    font-size:17px;
+    font-weight:900;
+    background:linear-gradient(90deg,#304ffe,#7c00ff);
+    margin-top:10px;
+    cursor:pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <div class="admin-logo">CaseEdu<br>Admin</div>
+
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="admin-link">🏠Dashboard</a>
+        <a href="{% url 'adminpanel:new_account' %}" class="admin-link active">➕New Account</a>
+        <a href="{% url 'adminpanel:accounts_list' %}" class="admin-link">👥Accounts</a>
+        <a href="{% url 'adminpanel:groups_list' %}" class="admin-link">🏫 Groups</a>
+        <a href="{% url 'adminpanel:new_group' %}" class="admin-link">📌New Group</a>
+        <a href="{% url 'adminpanel:admin_logout' %}" class="admin-link">🚪Logout</a>
+    </aside>
+
+    <section class="admin-content">
+
+        <div class="form-box">
+            <h1>Yangi Account qo‘shish</h1>
+            <p>Admin teacher yoki student uchun username/parol yaratadi.</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label>Ism</label>
+                <input type="text" name="first_name" class="form-control" required>
+
+                <label>Familiya</label>
+                <input type="text" name="last_name" class="form-control" required>
+
+                <label>Username</label>
+                <input type="text" name="username" class="form-control" placeholder="Masalan: abdulla01" required>
+
+                <label>Role</label>
+                <select name="role" class="form-select">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+
+                <label>Guruh</label>
+                <select name="group" class="form-select">
+                    <option value="">Guruh tanlang</option>
+                    {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label>Parol</label>
+                <input type="password" name="password" class="form-control" required>
+
+                <label>Parolni tasdiqlash</label>
+                <input type="password" name="password_confirm" class="form-control" required>
+
+                <button type="submit" class="btn-save">
+                    Saqlash
+                </button>
+            </form>
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

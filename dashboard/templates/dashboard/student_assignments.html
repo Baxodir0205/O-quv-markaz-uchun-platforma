@@ -1,0 +1,276 @@
+{% extends 'dashboard/student_base.html' %}
+{% load static %}
+
+{% block content_student %}
+
+<style>
+.assign-page{
+    max-width:1200px;
+    margin:0 auto;
+}
+
+.assign-header{
+    background:#ffffff;
+    border-radius:24px;
+    padding:34px 38px;
+    margin-bottom:26px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+}
+
+.assign-header h1{
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.assign-header p{
+    margin-top:8px;
+    color:#64748b;
+}
+
+.assign-list{
+    display:grid;
+    gap:20px;
+}
+
+.assign-card{
+    background:#ffffff;
+    border-radius:24px;
+    padding:26px;
+    box-shadow:0 18px 45px rgba(15,23,42,0.08);
+    border:1px solid #eef2f7;
+}
+
+.assign-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:25px;
+}
+
+.assign-title{
+    font-size:23px;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:10px;
+}
+
+.assign-desc{
+    color:#475569;
+    line-height:1.6;
+    margin-bottom:16px;
+    max-width:760px;
+}
+
+.assign-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.badge-soft,
+.done-badge,
+.wait-badge{
+    padding:9px 14px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:14px;
+}
+
+.badge-soft{
+    background:#eef2ff;
+    color:#4338ca;
+}
+
+.done-badge{
+    background:#dcfce7;
+    color:#166534;
+}
+
+.wait-badge{
+    background:#fef3c7;
+    color:#92400e;
+}
+
+.result-box{
+    margin-top:18px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:18px;
+    padding:18px;
+}
+
+.result-box h4{
+    margin:0 0 10px;
+    font-size:17px;
+    font-weight:900;
+    color:#0f172a;
+}
+
+.result-box p{
+    margin:0;
+    color:#475569;
+    line-height:1.6;
+}
+
+.assign-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+}
+
+.btn-purple{
+    display:inline-block;
+    text-decoration:none;
+    padding:13px 20px;
+    border-radius:14px;
+    font-weight:900;
+    color:#ffffff !important;
+    background:linear-gradient(135deg,#7c3aed,#c026d3);
+    box-shadow:0 10px 22px rgba(124,58,237,.25);
+    white-space:nowrap;
+}
+
+.btn-lightx{
+    background:#eef2ff;
+    color:#4338ca !important;
+    box-shadow:none;
+}
+
+.empty-box{
+    text-align:center;
+    padding:55px 25px;
+}
+
+.empty-box h3{
+    margin:0;
+    font-size:28px;
+    color:#0f172a;
+    font-weight:900;
+}
+
+.empty-box p{
+    margin-top:12px;
+    color:#64748b;
+}
+
+@media(max-width:768px){
+    .assign-top{
+        flex-direction:column;
+    }
+
+    .btn-purple,
+    .btn-lightx{
+        width:100%;
+        text-align:center;
+    }
+}
+</style>
+
+<div class="assign-page">
+
+    <div class="assign-header">
+        <h1>Vazifalar</h1>
+        <p>Sizning guruhingizga berilgan topshiriqlar, ball va teacher izohlari shu yerda ko‘rinadi.</p>
+    </div>
+
+    <div class="assign-list">
+
+        {% for assignment in assignments %}
+        <div class="assign-card">
+
+            <div class="assign-top">
+
+                <div>
+                    <div class="assign-title">
+                        {{ assignment.title|default:"Nomsiz vazifa" }}
+                    </div>
+
+                    <div class="assign-desc">
+                        {{ assignment.description|default:"Topshiriq matni mavjud emas." }}
+                    </div>
+
+                    <div class="assign-meta">
+                        <span class="badge-soft">
+                            Guruh: {{ assignment.group.name }}
+                        </span>
+
+                        <span class="badge-soft">
+                            Deadline:
+                            {% if assignment.deadline %}
+                                {{ assignment.deadline }}
+                            {% else %}
+                                yo‘q
+                            {% endif %}
+                        </span>
+
+                        {% if assignment.id in submitted_assignments %}
+                            <span class="done-badge">Topshirildi</span>
+                        {% endif %}
+                    </div>
+
+                    {% for submission in submissions %}
+                        {% if submission.assignment.id == assignment.id %}
+
+                            {% if submission.checked %}
+                                <div class="result-box">
+                                    <div class="assign-meta">
+                                        <span class="done-badge">Tekshirildi</span>
+                                        <span class="badge-soft">Ball: {{ submission.score }}</span>
+                                    </div>
+
+                                    {% if submission.feedback %}
+                                        <br>
+                                        <h4>Teacher izohi:</h4>
+                                        <p>{{ submission.feedback }}</p>
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="result-box">
+                                    <span class="wait-badge">Teacher hali tekshirmagan</span>
+                                </div>
+                            {% endif %}
+
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+
+                <div class="assign-actions">
+
+                    {% if assignment.file %}
+                    <a href="{{ assignment.file.url }}" target="_blank" class="btn-purple btn-lightx">
+                        Faylni ochish
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'dashboard:submit_assignment' assignment.id %}" class="btn-purple">
+                        {% if assignment.id in submitted_assignments %}
+                            Ko‘rish
+                        {% else %}
+                            Topshirish
+                        {% endif %}
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="assign-card empty-box">
+            <h3>📝 Hozircha vazifa yo‘q</h3>
+            <p>Teacher vazifa yuklagandan keyin shu yerda chiqadi.</p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

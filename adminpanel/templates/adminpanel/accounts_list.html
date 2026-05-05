@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block extra_css %}
+<style>
+.site-footer, footer{display:none!important;}
+main{margin:0!important;padding:0!important;}
+body{overflow-x:hidden;background:#eef2f7;}
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#eef2f7;
+}
+
+.admin-sidebar{
+    width:270px;
+    background:#07002b;
+    padding:35px 22px;
+    flex-shrink:0;
+}
+
+.admin-logo{
+    color:#fff;
+    font-size:34px;
+    font-weight:900;
+    margin-bottom:40px;
+    line-height:1.2;
+}
+
+.admin-link{
+    display:block;
+    color:#fff;
+    text-decoration:none;
+    padding:15px 18px;
+    border-radius:14px;
+    margin-bottom:14px;
+    font-weight:800;
+}
+
+.admin-link:hover,
+.admin-link.active{
+    background:linear-gradient(90deg,#5b00ff,#b000ff);
+    color:#fff;
+}
+
+.admin-content{
+    flex:1;
+    padding:50px;
+}
+
+.page-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.page-top h1{
+    font-size:42px;
+    font-weight:900;
+    color:#111827;
+}
+
+.btn-new{
+    background:linear-gradient(135deg,#5b00ff,#b000ff);
+    color:#fff;
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:14px;
+    font-weight:900;
+    box-shadow:0 12px 25px rgba(124,58,237,.25);
+}
+
+.search-box{
+    background:#fff;
+    padding:18px;
+    border-radius:20px;
+    box-shadow:0 12px 35px rgba(0,0,0,.06);
+    margin-bottom:25px;
+}
+
+.search-box input{
+    width:100%;
+    height:52px;
+    border:1px solid #dbe2ea;
+    border-radius:14px;
+    padding:0 16px;
+    font-weight:700;
+}
+
+.admin-box{
+    background:#fff;
+    padding:28px;
+    border-radius:24px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:0;
+}
+
+.table th,
+.table td{
+    padding:14px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+.table th{
+    color:#374151;
+    font-weight:900;
+    background:#f8fafc;
+}
+
+.user-name{
+    font-weight:900;
+    color:#111827;
+}
+
+.role-badge{
+    display:inline-block;
+    padding:7px 13px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-weight:900;
+    text-transform:capitalize;
+}
+
+.group-badge{
+    display:inline-block;
+    padding:7px 13px;
+    border-radius:999px;
+    background:#ecfdf5;
+    color:#047857;
+    font-weight:900;
+}
+
+.no-group{
+    color:#9ca3af;
+    font-weight:800;
+}
+
+.action-buttons{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.btn-edit{
+    background:#facc15;
+    color:#111827;
+    text-decoration:none;
+    padding:9px 14px;
+    border-radius:10px;
+    font-weight:900;
+}
+
+.btn-delete{
+    border:none;
+    background:#ff0055;
+    color:#fff;
+    padding:9px 14px;
+    border-radius:10px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.delete-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.55);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.delete-box{
+    width:420px;
+    max-width:90%;
+    background:#fff;
+    border-radius:24px;
+    padding:32px;
+    text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.25);
+}
+
+.delete-box h3{
+    margin:0 0 10px;
+    font-size:28px;
+    font-weight:900;
+    color:#111827;
+}
+
+.delete-box p{
+    color:#64748b;
+    margin-bottom:24px;
+    font-weight:700;
+}
+
+.modal-actions{
+    display:flex;
+    gap:12px;
+}
+
+.btn-cancel,
+.btn-danger{
+    flex:1;
+    padding:14px;
+    border-radius:14px;
+    text-decoration:none;
+    border:none;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.btn-cancel{
+    background:#e2e8f0;
+    color:#111827;
+}
+
+.btn-danger{
+    background:linear-gradient(135deg,#ef4444,#f43f5e);
+    color:#fff;
+}
+
+@media(max-width:900px){
+    .admin-layout{flex-direction:column;}
+    .admin-sidebar{width:100%;}
+    .admin-content{padding:25px;}
+    .page-top{flex-direction:column;align-items:flex-start;gap:15px;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <div class="admin-logo">CaseEdu<br>Admin</div>
+
+        <a href="{% url 'adminpanel:admin_dashboard' %}" class="admin-link">🏠Dashboard</a>
+        <a href="{% url 'adminpanel:new_account' %}" class="admin-link">➕New Account</a>
+        <a href="{% url 'adminpanel:accounts_list' %}" class="admin-link active">👥Accounts</a>
+        <a href="{% url 'adminpanel:groups_list' %}" class="admin-link">🏫 Groups</a>
+        <a href="{% url 'adminpanel:new_group' %}" class="admin-link">📌New Group</a>
+        <a href="{% url 'adminpanel:admin_logout' %}" class="admin-link">🚪Logout</a>
+    </aside>
+
+    <section class="admin-content">
+
+        <div class="page-top">
+            <h1>Accounts</h1>
+
+        </div>
+
+        <div class="search-box">
+            <form method="get">
+                <input type="text"
+                       name="search"
+                       value="{{ search }}"
+                       placeholder="🔍 Ism, familiya, guruh yoki role bo‘yicha qidirish...">
+            </form>
+        </div>
+
+        <div class="admin-box">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Foydalanuvchi</th>
+                        <th>Role</th>
+                        <th>Guruh</th>
+                        <th>Amallar</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+
+                            <td>
+                                <span class="user-name">
+                                    {{ user.first_name }} {{ user.last_name }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="role-badge">
+                                    {{ user.profile.role }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if user.profile.group %}
+                                    <span class="group-badge">
+                                        {{ user.profile.group.name }}
+                                    </span>
+                                {% else %}
+                                    <span class="no-group">Guruh yo‘q</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{% url 'adminpanel:edit_account' user.id %}" class="btn-edit">
+                                        Edit
+                                    </a>
+
+                                    <button type="button"
+                                            class="btn-delete"
+                                            onclick="openDeleteModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">Account topilmadi</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div>
+
+<div class="delete-modal" id="deleteModal">
+    <div class="delete-box">
+        <h3>Accountni o‘chirish</h3>
+        <p id="deleteText">Haqiqatan ham bu accountni o‘chirmoqchimisiz?</p>
+
+        <div class="modal-actions">
+            <button type="button" onclick="closeDeleteModal()" class="btn-cancel">
+                Bekor qilish
+            </button>
+
+          <form id="deleteForm" method="post" action="#">
+    {% csrf_token %}
+    <button type="submit" class="btn-danger" style="width:100%;padding:14px;border-radius:14px;font-weight:900;cursor:pointer;">
+        Ha, o'chirish
+    </button>
+</form>
+        </div>
+    </div>
+</div>
+
+<script>
+function openDeleteModal(id, name){
+    document.getElementById("deleteModal").style.display = "flex";
+    document.getElementById("deleteForm").action = "/admin-panel/accounts/" + id + "/delete/";
+
+    if(name.trim()){
+        document.getElementById("deleteText").innerText =
+            name + " accountini o‘chirmoqchimisiz?";
+    }
+}
+
+function closeDeleteModal(){
+    document.getElementById("deleteModal").style.display = "none";
+}
+</script>
+
+{% endblock %}
